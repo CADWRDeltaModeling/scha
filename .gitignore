@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environment
+.venv/
+.env/
+
+# Pytest
+.pytest_cache/
+
+# VSCode
+.vscode/
+
+# Misc
+.DS_Store
+junit.xml
+
+scha.code-workspace
+
+docsrc/

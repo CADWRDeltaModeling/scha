@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "versioneer"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scha"
+description = "State-space cyclical harmonic analysis (SCHA) tools"
+dynamic = ["version"]
+authors = [ { name = "Unknown" } ]
+readme = "README.rst"
+requires-python = "<3.14"
+keywords = ["scha", "state-space", "time-series"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+]
+
+dependencies = ["pandas","numpy"]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-xdist", "pandoc"]
+
+[tool.versioneer]
+VCS = "git"
+versionfile_source = "src/scha/_version.py"
+versionfile_build = "scha/_version.py"
+tag_prefix = ""
+parentdir_prefix = "scha-"
+
+[tool.pytest.ini_options]
+norecursedirs = [".*", "*.egg*", "build", "dist", "conda.recipe"]
+addopts = "--junitxml=junit.xml --ignore setup.py --tb native --strict-markers --durations=20"
+markers = ["serial: execute test serially (to avoid race conditions)"]
