@@ -4,12 +4,15 @@ from scha.state_space import build_scha_state_space, default_prior
 from scha.ffbs import kalman_filter, kalman_smoother
 import pandas as pd
 import numpy as np
-HERE=Path(__file__).resolve().parent.parent / 'examples' / 'tropical'
-params_obj,_=load_scha_params_from_yaml(HERE / 'tropical_params.yml', dt_spec=None, infer_dt_from_index=False)
-ss=build_scha_state_space(params_obj)
-df=pd.read_csv(HERE / 'tropical_sample.csv')
-y=df['value']
 from scha.state_space import default_prior
+HERE=Path(__file__).resolve().parent.parent / 'examples' / 'tropical'
+df=pd.read_csv(HERE / 'tropical_sample.csv',index_col=0,header=0)
+
+y=df['value']
+
+params_obj,_=load_scha_params_from_yaml(HERE / 'tropical_params.yml',index=df.index)
+ss=build_scha_state_space(params_obj)
+
 a0_py,P0_py = default_prior(params_obj, sigma2_diffuse=4)
 
 # ---- Initialization to match dlm convention for this test ----
@@ -32,11 +35,10 @@ print("  R :", np.diag(P0r)[:10])
 print("  PY:", np.diag(P0p)[:10])
 print("P0 max abs diff:", np.max(np.abs(P0p - P0r)), "mean abs diff:", np.mean(np.abs(P0p - P0r)))
 
-
-print("P0")
-print(P0[:5,:5 ])
-P0[0,0] = 4.
-P0[1,1] = 4.
+print("df.shape:", df.shape)
+print("y type:", type(y), "y.shape:", np.asarray(y).shape)
+print("len(y):", len(y))
+print("y.head():", getattr(y, "head", lambda: y)())
 
 fil=kalman_filter(y.values, T=ss['T'], R=ss['R'], Q=ss['Q'], Z=ss['Z'], H=ss['H'], a0=a0, P0=P0,joseph=True)
 

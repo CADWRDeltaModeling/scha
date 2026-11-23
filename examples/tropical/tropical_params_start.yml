@@ -1,0 +1,22 @@
+# Tropical example parameters (human-friendly units)
+# Frequencies are specified in cycles per day (cpd). The script converts to radians per time-step.
+# dt is in days per sample (e.g., dt=1/24 for hourly).
+
+m: 2
+n: 4
+# freqs can be a list of aliases or numeric cycles-per-day, or a mapping label: alias/value
+# Example list form using standard aliases:
+freqs: 
+  D1: D1
+  D2: D2
+  D3: D3
+  D4: D4
+# Or mapping form (label -> alias or numeric cpd):
+# freqs: {D1: M1, INERT: 1.0123, D2: M2}
+
+rho: 0.9925
+sigma2_eps: 1.e-04
+sigma2_zeta: 1.e-4
+# sigma2_kappa must be provided and match the freqs (either scalar, single-item list, list of same length, or mapping)
+sigma2_kappa: [ 1.35e-13,1.35e-13,1.35e-13,1.35e-13]
+sigma2_diffuse: 4.

@@ -1,12 +1,14 @@
 
 # -*- coding: utf-8 -*-
-"""
-Tide frequency registry for SCHA (Python)
-----------------------------------------
+"""Tide frequency registry for SCHA (Python).
+
 - Provides canonical tidal constituent names with radians-per-hour values,
   following your R `tide_freq_radians_hr()` list.
 - Adds D1..D6 aliases mapping to M1..M6 (as requested), while keeping M1..M8, K1, O1, etc.
 - Utilities to select subsets and rescale to your sampling rate (e.g., 4 samples/hr for 15-min data).
+
+Frequencies in this module are in radians per hour unless a function says
+radians per sample; the model itself works in radians per sample.
 """
 
 from __future__ import annotations
@@ -57,13 +59,44 @@ _ALIASES = {
 }
 
 def all_names(include_aliases: bool = True) -> List[str]:
+    """List the registered tide names.
+
+    Parameters
+    ----------
+    include_aliases : bool, default True
+        If True, append the aliases D1..D6 after the canonical names.
+
+    Returns
+    -------
+    list of str
+        Canonical names in registry order, followed by the aliases if
+        requested.
+    """
     names = list(_RPH.keys())
     if include_aliases:
         names = names + list(_ALIASES.keys())
     return names
 
 def rph(name: str) -> float:
-    """Radians per hour for a given canonical or alias name."""
+    """Radians per hour for a given canonical or alias name.
+
+    Parameters
+    ----------
+    name : str
+        Canonical constituent name (for example ``"M2"``) or alias
+        (``"D1"`` to ``"D6"``).
+
+    Returns
+    -------
+    float
+        Frequency in radians per hour; an alias has the value of its M
+        constituent.
+
+    Raises
+    ------
+    KeyError
+        If `name` is neither a canonical name nor an alias.
+    """
     if name in _RPH:
         return float(_RPH[name])
     if name in _ALIASES:
@@ -73,7 +106,29 @@ def rph(name: str) -> float:
 def select(names: Iterable[str], samples_per_hour: float = 1.0) -> Tuple[np.ndarray, List[str]]:
     """
     Select a set of tide names and convert to radians per sample.
-    Returns (freqs_rad_per_sample, resolved_names) where aliases are resolved to their canonical names.
+    Returns (freqs_rad_per_sample, resolved_names); alias names (D1..D6) are
+    converted using the frequency of their canonical name, and each returned
+    name is the name as given.
+
+    Parameters
+    ----------
+    names : iterable of str
+        Canonical names or aliases.
+    samples_per_hour : float, default 1.0
+        Sampling rate; the radians-per-hour value is divided by this to give
+        radians per sample.
+
+    Returns
+    -------
+    freqs_rad_per_sample : (len(names),) ndarray of float
+        Frequencies in radians per sample, in the order of `names`.
+    resolved_names : list of str
+        The names, in the same order. Aliases keep their alias label (they
+        are not replaced by the canonical name).
+
+    See Also
+    --------
+    rph : Radians per hour of a single name.
     """
     out_vals: List[float] = []
     out_names: List[str] = []
@@ -90,7 +145,23 @@ def select(names: Iterable[str], samples_per_hour: float = 1.0) -> Tuple[np.ndar
     return np.array(out_vals, dtype=float), out_names
 
 def label_for_value(val_rph: float, tol: float = 1e-9) -> str:
-    """Find the canonical label for a given radians-per-hour value within tolerance."""
+    """Find the canonical label for a given radians-per-hour value within tolerance.
+
+    Parameters
+    ----------
+    val_rph : float
+        Frequency in radians per hour.
+    tol : float, default 1e-9
+        Absolute tolerance, in radians per hour, for a match.
+
+    Returns
+    -------
+    str
+        The first canonical name (registry order) whose value is within `tol`
+        of `val_rph`. Aliases D1..D6 are never returned. If none matches, the
+        string ``"unknown(<value>)"`` with the value formatted to six
+        significant digits.
+    """
     for k, v in _RPH.items():
         if abs(v - val_rph) <= tol:
             return k

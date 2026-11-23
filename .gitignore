@@ -25,4 +25,7 @@ junit.xml
 
 scha.code-workspace
 
-docsrc/
+# Sphinx documentation (docsrc/ is the source; docs/ holds generated output)
+docs/
+docsrc/_api/
+docsrc/_build/

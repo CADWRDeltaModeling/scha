@@ -1,0 +1,8 @@
+sphinx>=8.2
+sphinx_rtd_theme
+sphinx-autodoc-typehints
+sphinx-click
+sphinxcontrib-bibtex
+numpydoc
+nbsphinx
+sphinx-autobuild

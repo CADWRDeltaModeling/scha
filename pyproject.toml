@@ -15,10 +15,13 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 
-dependencies = ["pandas","numpy"]
+dependencies = ["pandas", "numpy", "scipy", "numba", "pyyaml", "click", "vtools3"]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-xdist", "pandoc"]
+
+[project.scripts]
+scha = "scha.cli:main"
 
 [tool.versioneer]
 VCS = "git"
@@ -30,4 +33,5 @@ parentdir_prefix = "scha-"
 [tool.pytest.ini_options]
 norecursedirs = [".*", "*.egg*", "build", "dist", "conda.recipe"]
 addopts = "--junitxml=junit.xml --ignore setup.py --tb native --strict-markers --durations=20"
-markers = ["serial: execute test serially (to avoid race conditions)"]
+markers = ["serial: execute test serially (to avoid race conditions)",
+           "slow: long-running reproduction tests (deselect with -m 'not slow')"]

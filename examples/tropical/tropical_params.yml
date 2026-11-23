@@ -1,20 +1,20 @@
-# Tropical example parameters (human-friendly units)
-# Frequencies are specified in cycles per day (cpd). The script converts to radians per time-step.
-# dt is in days per sample (e.g., dt=1/24 for hourly).
+# Tropical example parameters
+# freqs map labels to tide aliases (scha.tide_registry) or numeric radians per hour.
+# The time step is not set here; it comes from the data index (15 min for tropical_sample.csv).
 
 m: 2
 n: 4
-# freqs can be a list of aliases or numeric cycles-per-day, or a mapping label: alias/value
-# Example list form using standard aliases:
-freqs: [D1, D2, D3, D4]
-# Or mapping form (label -> alias or numeric cpd):
-# freqs: {D1: M1, INERT: 1.0123, D2: M2}
+freqs: 
+  D1: D1
+  D2: D2
+  D3: D3
+  D4: D4
+# Mapping with a numeric entry (radians per hour):
+# freqs: {D1: M1, INERT: 0.265, D2: M2}
 
-rho: 0.9935
+rho: 0.9925
 sigma2_eps: 2.772368e-05
 sigma2_zeta: 1.398299e-10
 # sigma2_kappa must be provided and match the freqs (either scalar, single-item list, list of same length, or mapping)
 sigma2_kappa: [ 1.307158e-13,1.309000e-13,1.312995e-13,1.291274e-13]
-dt: 15min
 sigma2_diffuse: 1000.
-time_unit: hour
